@@ -22,6 +22,9 @@
   },
   "dependencies": {
     "ebay-api": "^1.13.7",
-    "electron-reload": "^1.2.2"
+    "electron-handlebars": "^2.0.0",
+    "electron-reload": "^1.2.2",
+    "handlebars": "^4.0.11",
+    "hbs": "^4.0.1"
   }
 }

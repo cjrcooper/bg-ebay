@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="../lib/bootstrap-4.0.0-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../lib/bootstrap-4.0.0-dist/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="../lib/core.css">
+  </head>
+    <body>
+      <div class="wrapper">
+        {{{body}}}
+      </div>
+      <script>
+        // You can also require other files to run in this process
+        require('../renderer.js')
+        window.$ = window.jQuery = require('../lib/jquery-3.3.1.js')
+      </script>
+      <script type="text/javascript" src="../lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+      <script>
+        $(document).ready(function () {
+          $('#sidebarCollapse').on('click', function () {
+              $('#sidebar').toggleClass('active');
+          });
+        });
+      </script>
+    </body>
+</html>

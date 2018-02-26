@@ -1,11 +1,10 @@
 var ebay = require('ebay-api');
 var config = require('./config.js')
-var $ = require('./lib/jquery-3.3.1.min.js')
+var $ = require('./lib/jquery-3.3.1.js')
 
 $('#search-button').on('click', () => {
   var params = {
     keywords: ["Canon", "Powershot"],
-      // add additional fields
     outputSelector: ['AspectHistogram'],
 
     paginationInput: {
@@ -19,7 +18,7 @@ $('#search-button').on('click', () => {
 
     domainFilter: [
       {name: 'domainName', value: 'Digital_Cameras'}
-    ]
+    ] 
   };
 
   ebay.xmlRequest({
