@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <title>eBahz</title>
     <link rel="stylesheet" href="../lib/bootstrap-4.0.0-dist/css/bootstrap.css">
     <link rel="stylesheet" href="../lib/bootstrap-4.0.0-dist/css/bootstrap-grid.css">
     <link rel="stylesheet" href="../lib/core.css">
@@ -11,33 +11,57 @@
     <body>
       <div class="wrapper">
         <nav id="sidebar">
-          <!-- Sidebar Links -->
-          <ul class="list-unstyled components">
-              <li class="active">
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
-                  <i class="fas fa-tachometer-alt"></i>
-                  Home
-                </a>
-                </li>
-              <li>
-                  <a href="#">
-                    <i class="fas fa-stopwatch"></i>
-                      Automation
-                  </a>
-              </li>
-              <li>
-                  <a href="#">
-                    <i class="fas fa-wrench"></i>
-                      Settings
-                  </a>
-              </li>
-          </ul>
+
         </nav>
-      </div>  
       <!--Content -->
         <div id="content">
-        <div>
+          <div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>eBay Search</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4">
+            <input type="search" id="search-input" value="" class="form-control" placeholder="Search using Fuzzy searching">
+            <div class="form-group row">
+              <label for="example-number-input" class="col-2 col-form-label">Number</label>
+              <div class="col-10">
+                <input type="number" id="number-input" value="5">
+              </div>
+            </div>
+            <div style="text-align:center; padding-top: 5px; padding-bottom: 5px">
+              <button id="search-button" class="btn btn-primary" type="submit" class="form-control">
+                <span class="glyphicon glyphicon-search">Search</span>
+              </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table" id="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Shipping Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <hr>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
       <script>
         // You can also require other files to run in this process
         require('../renderer.js')

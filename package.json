@@ -25,6 +25,7 @@
     "electron-handlebars": "^2.0.0",
     "electron-reload": "^1.2.2",
     "handlebars": "^4.0.11",
-    "hbs": "^4.0.1"
+    "hbs": "^4.0.1",
+    "lodash": "^4.17.5"
   }
 }
