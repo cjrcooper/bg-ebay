@@ -23,25 +23,43 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12" style="text-align:center">
             <h3>eBay Search</h3>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-4 col-lg-offset-4">
-            <input type="search" id="search-input" value="" class="form-control" placeholder="Search using Fuzzy searching">
-            <div class="form-group row">
-              <label for="example-number-input" class="col-2 col-form-label">Number</label>
-              <div class="col-10">
-                <input type="number" id="number-input" value="5">
+          <div class="form-row">
+            <div class="col">
+              <label for="search-input">Search Terms</label>
+              <input type="search" id="search-input" value="" class="form-control" placeholder="...">
+            </div>
+            <div class="col">
+              <label for="search-input">Number of Results</label>
+              <input type="number" id="number-input" value="5" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-lg-offset-4">
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0">Free Shipping</legend>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="gridRadios" id="gridRadios1" value="option1" checked>
+                <label class="form-check-label" for="gridRadios1">
+                  First radio
+                </label>
               </div>
             </div>
-            <div style="text-align:center; padding-top: 5px; padding-bottom: 5px">
-              <button id="search-button" class="btn btn-primary" type="submit" class="form-control">
-                <span class="glyphicon glyphicon-search">Search</span>
-              </button>
-            </div>
+          </div>
+         </fieldset>
         </div>
+    </div>
+    <div style="text-align:right; padding-top: 5px; padding-bottom: 5px">
+      <button id="search-button" class="btn btn-primary" type="submit" class="form-control">
+        <span class="glyphicon glyphicon-search">Search</span>
+      </button>
     </div>
     <div class="row">
         <div class="col-lg-12">
