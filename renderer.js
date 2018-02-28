@@ -15,6 +15,10 @@ var setPageEntries = () => {
   return document.getElementById('number-input').value;
 }
 
+var freeShippingOnly = () => {
+  return document.getElementById('free-shipping').checked;
+}
+
 
 $('#search-button').on('click', () => {
 
@@ -28,7 +32,7 @@ $('#search-button').on('click', () => {
     },
 
     itemFilter: [
-      {name: 'FreeShippingOnly', value: true},
+      {name: freeShippingOnly(), value: true},
       {name: 'MaxPrice', value: '150'}
     ],
 
