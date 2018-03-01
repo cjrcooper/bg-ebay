@@ -5,11 +5,10 @@ var $ = require('./lib/jquery-3.3.1.js')
 
 
 var setKeyWords = () => {
-    var keyWords = document.getElementById('search-input').value;
-    var newWords = _.words(keyWords);
+    let keyWords = document.getElementById('search-input').value;
+    let newWords = _.words(keyWords);
     return newWords
 }
-
 
 var setPageEntries = () => {
   return document.getElementById('number-input').value;
@@ -19,9 +18,24 @@ var freeShippingOnly = () => {
   return document.getElementById('free-shipping').checked;
 }
 
+var checkEmptySearch = () => {
+  let searchInput = document.getElementById('search-input');
+  if (!searchInput.value) {
+    $('#search-input').css({
+      "border":"1px solid #ff8f8f"
+    })
+    return
+  } else {
+    $('#search-input').css({
+      "border":"1px solid #ced4da"
+    })
+  }
+}
+
 
 $('#search-button').on('click', () => {
 
+  checkEmptySearch();
 
   var params = {
     keywords: setKeyWords(),
@@ -32,52 +46,43 @@ $('#search-button').on('click', () => {
     },
 
     itemFilter: [
-      {name: freeShippingOnly(), value: true},
+      {name: 'FreeShippingOnly', value: freeShippingOnly()},
       {name: 'MaxPrice', value: '150'}
-    ],
-
-    domainFilter: [
-      {name: 'domainName', value: 'Digital_Cameras'}
     ]
   };
 
-  ebay.xmlRequest({
-      serviceName: 'Finding',
-      opType: 'findItemsByKeywords',
-      params: params,
-      parser: ebay.parseResponseJson,    // (default)
-      devId: config.devId,
-      certId: config.certId,
-      appId: config.appId,
-      authToken: config.authToken,
-      sandbox: true
-    },
-    // gets all the items together in a merged array
-    function itemsCallback(error, itemsResponse) {
-      if (error) throw error;
+  try {
+    ebay.xmlRequest({
+        serviceName: 'Finding',
+        opType: 'findItemsByKeywords',
+        params: params,
+        parser: ebay.parseResponseJson,    // (default)
+        devId: config.devId,
+        certId: config.certId,
+        appId: config.appId,
+        authToken: config.authToken,
+        sandbox: true
+      },
+      // gets all the items together in a merged array
+      function itemsCallback(error, itemsResponse) {
+        if (error) throw error;
 
-      var items = itemsResponse.searchResult.item;
+        console.log(itemsResponse)
 
+        var items = itemsResponse.searchResult.item;
+        var final = "";
 
+        for (var i = 0; i < items.length; i++) {
+          var title = '<td>' + items[i].title + '</td>';
+          var price = '<td>' + '$' + items[i].sellingStatus.currentPrice.amount.toString() + '</td>'
+          var shipping = '<td>' + '$' + items[i].shippingInfo.shippingServiceCost.amount.toString() + '</td>';
 
-      console.log('Found', items.length, 'items');
-      console.log(itemsResponse);
-
-
-      var final = "";
-
-      for (var i = 0; i < items.length; i++) {
-        var title = '<td>' + items[i].title + '</td>';
-        var price = '<td>' + '$' + items[i].sellingStatus.currentPrice.amount.toString() + '</td>'
-        var shipping = '<td>' + '$' + items[i].shippingInfo.shippingServiceCost.amount.toString() + '</td>';
-
-        final += '<tr>' + title + price + shipping + '</tr>';
-        console.log('- ' + items[i].title);
+          final += '<tr>' + title + price + shipping + '</tr>';
+        }
+        $('#table tbody').html(final)
       }
-
-      console.log(final);
-
-      $('#table tbody').html(final)
-    }
-  );
+    );
+  } catch (e) {
+    console.log(e)
+  }
 });
