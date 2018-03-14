@@ -18,17 +18,17 @@ var freeShippingOnly = () => {
   return document.getElementById('free-shipping').checked;
 }
 
+var setMaxPrice = () => {
+  return document.getElementById('max-price-input').value;
+}
+
 var checkEmptySearch = () => {
   let searchInput = document.getElementById('search-input');
   if (!searchInput.value) {
-    $('#search-input').css({
-      "border":"1px solid #ff8f8f"
-    })
-    return
+    searchInput.classList.add('search-error')
   } else {
-    $('#search-input').css({
-      "border":"1px solid #ced4da"
-    })
+    searchInput.classList.remove('search-error')
+    searchInput.classList.add('search-highlight')
   }
 }
 
@@ -47,21 +47,30 @@ $('#search-button').on('click', () => {
 
     itemFilter: [
       {name: 'FreeShippingOnly', value: freeShippingOnly()},
-      {name: 'MaxPrice', value: '150'}
+      {name: 'MaxPrice', value: setMaxPrice()}
     ]
   };
 
   try {
+    if (document.getElementById('search-input').value.length < 1) {
+      throw 'Empty'
+    }
+
     ebay.xmlRequest({
         serviceName: 'Finding',
         opType: 'findItemsByKeywords',
+        reqOptions: {
+          headers: {
+              'X-EBAY-SOA-GLOBAL-ID': 'EBAY-AU'
+          }
+        },
         params: params,
         parser: ebay.parseResponseJson,    // (default)
-        devId: config.devId,
-        certId: config.certId,
-        appId: config.appId,
-        authToken: config.authToken,
-        sandbox: true
+        devId: config.production.devId,
+        certId: config.production.certId,
+        appId: config.production.appId,
+        authToken: config.production.authToken,
+        sandbox: false
       },
       // gets all the items together in a merged array
       function itemsCallback(error, itemsResponse) {
