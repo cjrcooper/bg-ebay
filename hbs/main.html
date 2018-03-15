@@ -31,17 +31,17 @@
         <div class="col-lg-4 col-lg-offset-4">
           <div class="form-row">
             <div class="col-8 ">
-              <label for="search-input">Search Terms</label>
+              <label for="search-input"><strong>Search Terms</strong></label>
               <input type="search" id="search-input" value="" class="form-control" placeholder="...">
             </div>
             <div class="col-4">
-              <label for="search-input"># of Results</label>
+              <label for="search-input"><strong># of Results</strong></label>
               <input type="number" id="number-input" value="5" class="form-control">
             </div>
           </div>
           <div class="form-row">
             <div class="col-4">
-              <label for="search-input">Max Price</label>
+              <label for="search-input"><strong>Max Price</strong></label>
               <input type="number" id="max-price-input" value="150" class="form-control">
             </div>
           </div>
@@ -53,13 +53,18 @@
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="free-shipping" id="free-shipping" value="option1" checked>
                 <label class="form-check-label" for="free-shipping">
-                  Free Shipping
+                  <strong>Free Shipping</strong>
                 </label>
               </div>
             </div>
           </div>
          </fieldset>
         </div>
+    </div>
+    <div style="text-align:right; padding-top: 5px; padding-bottom: 5px">
+      <button id="excel-download" class="btn btn-primary" type="submit" class="form-control">
+        <span class="glyphicon glyphicon-search">Excel</span>
+      </button>
     </div>
     <div style="text-align:right; padding-top: 5px; padding-bottom: 5px">
       <button id="search-button" class="btn btn-primary" type="submit" class="form-control">
@@ -71,9 +76,11 @@
             <table class="table" id="table">
                 <thead>
                     <tr>
+                        <th>Seller</th>
                         <th>Item</th>
                         <th>$ Price</th>
-                        <th>$ Shipping Price</th>
+                        <th>$ Shipping</th>
+                        <th>Link</th>
                     </tr>
                 </thead>
                 <tbody>
