@@ -5,6 +5,8 @@ var $ = require('./lib/jquery-3.3.1.js')
 var shell = require('electron');
 var fs = require('fs');
 var xl = require('excel4node');
+var opn = require('opn');
+var headerConfiguration = require('./params.js')
 
 
 var excelDataResults = [];
@@ -14,30 +16,31 @@ var setKeyWords = () => {
     let keyWords = document.getElementById('search-input').value;
     let newWords = _.words(keyWords);
     return newWords
-}
+};
 
 var setPageEntries = () => {
   return document.getElementById('number-input').value;
-}
+};
 
 var freeShippingOnly = () => {
   return document.getElementById('free-shipping').checked;
-}
+};
 
 var setMaxPrice = () => {
   return document.getElementById('max-price-input').value;
-}
+};
 
 var checkEmptySearch = () => {
   let searchInput = document.getElementById('search-input');
   if (!searchInput.value) {
-    searchInput.classList.add('search-error')
+    searchInput.classList.add('search-error');
+    return false;
   } else {
-    searchInput.classList.remove('search-error')
-    searchInput.classList.add('search-highlight')
+    searchInput.classList.remove('search-error');
+    searchInput.classList.add('search-highlight');
+    return true;
   }
-}
-
+};
 
 var downloadExcel = (data) => {
   var wb = new xl.Workbook();
@@ -45,22 +48,16 @@ var downloadExcel = (data) => {
   var iterate = 1;
 
   _.forEach(excelDataResults, (value) => {
-    ws.cell(1,iterate).string(value[0])
-    ws.cell(2,iterate).string(value[1])
-    ws.cell(3,iterate).number(value[2])
-    ws.cell(4,iterate).number(value[3])
-    console.log("test");
+    ws.cell(iterate,1).string(value[0])
+    ws.cell(iterate,2).string(value[1])
+    ws.cell(iterate,3).number(value[2])
+    ws.cell(iterate,4).number(value[3])
     iterate++;
   })
   wb.write('Excel.xlsx');
   var path = "Excel.xlsx";
-  fs.open(path, 'r+', (err, fd) => {
-    if(err) {
-      console.log(err);
-    }
-  })
-  console.log(`${process.cwd()}/Excel.xlsx`)
-}
+  opn(path);
+};
 
 
 
@@ -69,36 +66,35 @@ $(document).on('click', 'a[href^="http"]', function(e) {
     shell.shell.openExternal(this.href);
 });
 
+
+
+
 $('#excel-download').on('click', () => {
-  downloadExcel(excelDataResults);
-})
-
-$('#search-button').on('click', () => {
-
-  checkEmptySearch();
-
-  var params = {
-    keywords: setKeyWords(),
-    outputSelector: ['AspectHistogram'],
-
-    paginationInput: {
-      entriesPerPage: setPageEntries()
-    },
-
-    itemFilter: [
-      {name: 'FreeShippingOnly', value: freeShippingOnly()},
-      {name: 'MaxPrice', value: setMaxPrice()}
-    ],
-
-    outputSelector: "SellerInfo"
-  };
-
   try {
-    if (document.getElementById('search-input').value.length < 1) {
-      throw 'Empty'
-    }
+    downloadExcel(excelDataResults);
+  } catch (e) {
+    errorLogging(e);
+  }
+});
 
-    ebay.xmlRequest({
+var errorLogging = (error) => {
+  fs.writeFile('errorLogs', error, (err) => {
+    if (err) throw err;
+  })
+};
+
+var searchingIcons = () => {
+  var spinner = '<div class="loader-container"><div class="loader"></div></div>'
+  $('#table tbody').html(spinner);
+};
+
+
+var searchItems = () => {
+  new Promise((resolve, reject) => {
+    var params = setSearchParamaters()
+    searchingIcons();
+
+   ebay.xmlRequest({
         serviceName: 'Finding',
         opType: 'findItemsByKeywords',
         reqOptions: {
@@ -113,25 +109,24 @@ $('#search-button').on('click', () => {
         appId: config.production.appId,
         authToken: config.production.authToken,
         sandbox: false
-      },
-      // gets all the items together in a merged array
-      function itemsCallback(error, itemsResponse) {
-        if (error) throw error;
-
-        console.log(itemsResponse)
-
+      }, (error, itemsResponse) => {
+        if (itemsResponse.ack === "Success") {
+          resolve(itemsResponse);
+        } else {
+          reject(error);
+        }
+    });
+  }).then((itemsResponse) => {
         var items = itemsResponse.searchResult.item;
         var final = "";
-        resultList = [];
+        excelDataResults = [];
 
         for (var i = 0; i < items.length; i++) {
-
           var sellerData = items[i].sellerInfo.sellerUserName;
           var titleData = items[i].title;
           var priceData = items[i].sellingStatus.currentPrice.amount;
           var shippingData = items[i].shippingInfo.shippingServiceCost.amount;
           var linkData = items[i].viewItemURL;
-
 
           var seller = '<td>' + sellerData + '</td>';
           var title = '<td>' + titleData + '</td>';
@@ -146,9 +141,40 @@ $('#search-button').on('click', () => {
         }
         $('#table tbody').html(final)
         console.log(excelDataResults);
-      }
-    );
-  } catch (e) {
-    console.log(e)
+  }).catch((error) => {
+    console.log(error);
+    errorLogging(error);
+  });
+};
+
+
+
+
+
+var setSearchParamaters = () => {
+    var config = {
+        keywords: setKeyWords(),
+        outputSelector: ['AspectHistogram'],
+
+        paginationInput: {
+          entriesPerPage: setPageEntries()
+        },
+
+        itemFilter: [
+          {name: 'FreeShippingOnly', value: freeShippingOnly()},
+          {name: 'MaxPrice', value: setMaxPrice()}
+        ],
+
+        outputSelector: "SellerInfo"
+      };
+    return config;
+}
+
+
+
+$('#search-button').on('click', () => {
+  if (checkEmptySearch() === true) {
+    searchItems()
   }
+    return;
 });
