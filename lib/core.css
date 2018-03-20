@@ -14,15 +14,21 @@ tr:hover {
   background-color: #e9ecef;
 }
 
-.loader-container { 
-    width: 640px; /*can be in percentage also.*/
-    height: auto;
-    margin: 0 auto;
-    padding: 10px;
+.panel-body {
+  text-align: center;
+  color: #f35555;
+  display:none;
+}
+
+.loader-container {
     position: relative;
+    width: 100%;
+    text-align: center;
+    display: none;
 }
 
 .loader {
+  display: inline-block;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
   border-top: 16px solid #3498db;

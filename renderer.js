@@ -7,6 +7,8 @@ var fs = require('fs');
 var xl = require('excel4node');
 var opn = require('opn');
 var headerConfiguration = require('./params.js')
+var nodemailer = require('nodemailer');
+
 
 
 var excelDataResults = [];
@@ -43,11 +45,38 @@ var checkEmptySearch = () => {
 };
 
 var downloadExcel = (data) => {
+
+  if (data.length < 1) {
+    return
+  }
+
   var wb = new xl.Workbook();
   var ws = wb.addWorksheet("EbayListings");
-  var iterate = 1;
+  var iterate = 2;
 
   _.forEach(excelDataResults, (value) => {
+
+    var myStyle = wb.createStyle({
+    font: {
+        bold: true,
+        color: '#FF0800'
+      }
+    });
+
+    //Row height
+    ws.row(1).setHeight(20);
+    ws.column(1).setWidth(25);
+    ws.column(2).setWidth(60);
+    ws.column(3).setWidth(15);
+    ws.column(4).setWidth(15);
+
+    //Excel Headers
+    ws.cell(1, 1).string("Seller").style(myStyle);
+    ws.cell(1, 2).string("Item").style(myStyle);
+    ws.cell(1, 3).string("Price").style(myStyle);
+    ws.cell(1, 4).string("Shipping").style(myStyle);
+
+    //Excel Headers
     ws.cell(iterate,1).string(value[0])
     ws.cell(iterate,2).string(value[1])
     ws.cell(iterate,3).number(value[2])
@@ -59,15 +88,10 @@ var downloadExcel = (data) => {
   opn(path);
 };
 
-
-
 $(document).on('click', 'a[href^="http"]', function(e) {
     e.preventDefault();
     shell.shell.openExternal(this.href);
 });
-
-
-
 
 $('#excel-download').on('click', () => {
   try {
@@ -78,20 +102,66 @@ $('#excel-download').on('click', () => {
 });
 
 var errorLogging = (error) => {
-  fs.writeFile('errorLogs', error, (err) => {
+  var date = new Date()
+  var log = date + " " + error
+  fs.writeFile('errorLogs.txt', log, (err) => {
     if (err) throw err;
   })
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    secure: false,
+    port: 25,
+    auth: {
+      user: config.email.address,
+      pass: config.email.password
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+
+  let HelperOptions = {
+    from: config.email.from,
+    to: config.email.address,
+    subject: 'BG-Ebay App Error',
+    text: log
+  };
+    transporter.sendMail(HelperOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+    });
 };
 
 var searchingIcons = () => {
-  var spinner = '<div class="loader-container"><div class="loader"></div></div>'
-  $('#table tbody').html(spinner);
+  $('.loader-container').css({
+    "display": "block"
+  })
 };
 
+var searchingAndErrorIconsHide = () => {
+  $('.loader-container').css({
+    "display": "none"
+  })
+  $('.panel-body').css({
+    "display": "none"
+  })
+};
+
+var clearList = () => {
+  $("tbody").html("");
+}
+
+var errorIcons = () => {
+  $('.panel-body').css({
+    "display": "block"
+  })
+}
 
 var searchItems = () => {
   new Promise((resolve, reject) => {
     var params = setSearchParamaters()
+    clearList();
     searchingIcons();
 
    ebay.xmlRequest({
@@ -110,6 +180,7 @@ var searchItems = () => {
         authToken: config.production.authToken,
         sandbox: false
       }, (error, itemsResponse) => {
+        itemsResponse.ack = "Failed";
         if (itemsResponse.ack === "Success") {
           resolve(itemsResponse);
         } else {
@@ -117,6 +188,7 @@ var searchItems = () => {
         }
     });
   }).then((itemsResponse) => {
+        searchingAndErrorIconsHide();
         var items = itemsResponse.searchResult.item;
         var final = "";
         excelDataResults = [];
@@ -140,9 +212,9 @@ var searchItems = () => {
           final += '<tr>' + seller + title + price + shipping + link + '</tr>';
         }
         $('#table tbody').html(final)
-        console.log(excelDataResults);
   }).catch((error) => {
-    console.log(error);
+    searchingAndErrorIconsHide();
+    errorIcons();
     errorLogging(error);
   });
 };
@@ -170,11 +242,17 @@ var setSearchParamaters = () => {
     return config;
 }
 
-
+$("#search-input").on('keypress', (e) => {
+  if (e.which === 13) {
+    if (checkEmptySearch() === true) {
+      searchItems()
+    }
+    return;
+  }
+})
 
 $('#search-button').on('click', () => {
   if (checkEmptySearch() === true) {
     searchItems()
   }
-    return;
 });
