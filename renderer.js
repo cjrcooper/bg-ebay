@@ -180,7 +180,6 @@ var searchItems = () => {
         authToken: config.production.authToken,
         sandbox: false
       }, (error, itemsResponse) => {
-        itemsResponse.ack = "Failed";
         if (itemsResponse.ack === "Success") {
           resolve(itemsResponse);
         } else {

@@ -1,0 +1,10 @@
+directories:
+  output: dist
+  buildResources: build
+appId: '1234'
+mac:
+  target:
+    - zip
+  category: your.app.category.type
+icon: ebay_512.png
+electronVersion: 1.7.12
