@@ -2,3 +2,4 @@ node_modules
 config.js
 Excel.xlsx
 errorLogs.txt
+dist
