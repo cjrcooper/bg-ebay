@@ -1,9 +1,0 @@
-version: 1.0.0
-files:
-  - url: bg-ebay-setup-1.0.0.exe
-    sha512: KnC/r2lMlsUocMn92w4BvCQoHujGkY9t241QOsivVRN7iA2Z6CVchEAyCE0ilGMcwdGcJ4t5t1CruZcmeJLTSA==
-    size: 81766383
-path: bg-ebay-setup-1.0.0.exe
-sha512: KnC/r2lMlsUocMn92w4BvCQoHujGkY9t241QOsivVRN7iA2Z6CVchEAyCE0ilGMcwdGcJ4t5t1CruZcmeJLTSA==
-sha2: 3b4911cfe9cafc534d1abb4c1ae8fc3e535bdddc01b9130bd331337efc5b795b
-releaseDate: '2018-03-20T13:46:27.492Z'

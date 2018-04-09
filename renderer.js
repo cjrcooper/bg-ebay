@@ -1,14 +1,14 @@
-var ebay = require('ebay-api');
-var config = require('./config.js')
-var _ = require('lodash');
-var $ = require('./lib/jquery-3.3.1.js')
-var shell = require('electron');
-var fs = require('fs');
-var xl = require('excel4node');
-var opn = require('opn');
-var headerConfiguration = require('./params.js')
-var nodemailer = require('nodemailer');
-
+const ebay = require('ebay-api');
+const config = require('./config.js')
+const _ = require('lodash');
+const os = require('os');
+const $ = require('./lib/jquery-3.3.1.js')
+const shell = require('electron');
+const fs = require('fs');
+const xl = require('excel4node');
+const opn = require('opn');
+const headerConfiguration = require('./params.js')
+const nodemailer = require('nodemailer');
 
 
 var excelDataResults = [];
@@ -83,9 +83,28 @@ var downloadExcel = (data) => {
     ws.cell(iterate,4).number(value[3])
     iterate++;
   })
-  wb.write('Excel.xlsx');
-  var path = "Excel.xlsx";
-  opn(path);
+  
+  var home = os.homedir()
+  var documents = '/Documents'
+  var dir = '/EbaySearchResults';
+  var date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+  
+  wb.writeToBuffer().then((buffer) => {
+    try {
+      if(!fs.existsSync(`${home}${documents}${dir}`)) {
+        fs.mkdirSync(`${home}${documents}${dir}`)
+      }
+      
+      fs.writeFile(`${home}${documents}${dir}/${date}-ebaylistings.xlsx`, buffer, (err) => {
+        if (err) {
+          errorLogging(err);
+        }
+        opn(`${home}${documents}${dir}/${date}-ebaylistings.xlsx`);
+      })
+    } catch(e) {
+      errorLogging(e);
+    }
+  });
 };
 
 $(document).on('click', 'a[href^="http"]', function(e) {
@@ -103,9 +122,20 @@ $('#excel-download').on('click', () => {
 
 var errorLogging = (error) => {
   var date = new Date()
-  var log = date + " " + error
+  var logError = error;
+  var logErrorStack = error.stack;
+  var params = (error.params === undefined ? "" : error.params); 
+
+  var log = `${date} |/ +
+             ${params} |/ +
+             ${logError} |/ +
+             ${logErrorStack}`;
+             
   fs.writeFile('errorLogs.txt', log, (err) => {
-    if (err) throw err;
+    if (err) {
+      var writeError = log + " " + err 
+      errorLogging(writeFile);
+    }
   })
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -159,10 +189,16 @@ var errorIcons = () => {
 }
 
 var searchItems = () => {
+  
+  var searchTerms;
+  
   new Promise((resolve, reject) => {
     var params = setSearchParamaters()
     clearList();
+    searchingAndErrorIconsHide();
     searchingIcons();
+    
+    searchTerms = params;
 
    ebay.xmlRequest({
         serviceName: 'Finding',
@@ -214,6 +250,9 @@ var searchItems = () => {
   }).catch((error) => {
     searchingAndErrorIconsHide();
     errorIcons();
+    
+    error.params = searchTerms;
+    
     errorLogging(error);
   });
 };
