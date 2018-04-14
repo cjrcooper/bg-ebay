@@ -9,6 +9,8 @@ const xl = require('excel4node');
 const opn = require('opn');
 const headerConfiguration = require('./params.js')
 const nodemailer = require('nodemailer');
+const path = require('path');
+
 
 
 var excelDataResults = [];
@@ -83,24 +85,26 @@ var downloadExcel = (data) => {
     ws.cell(iterate,4).number(value[3])
     iterate++;
   })
-  
+
   var home = os.homedir()
-  var documents = '/Documents'
-  var dir = '/EbaySearchResults';
-  var date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
-  
+  var dir = 'EbaySearchResults';
+  var date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/ /g,"_").replace(":", "-").replace(":", "-") + '.xslx';
+  var logpath = path.join(home, 'Documents', dir, date);
+
   wb.writeToBuffer().then((buffer) => {
     try {
-      if(!fs.existsSync(`${home}${documents}${dir}`)) {
-        fs.mkdirSync(`${home}${documents}${dir}`)
+      debugger;
+      if(!fs.existsSync(path.join(home, 'Documents', dir))) {
+        fs.mkdirSync(path.join(home, 'Documents', dir), (err) => {
+          errorLogging(err);
+        })
       }
-      
-      fs.writeFile(`${home}${documents}${dir}/${date}-ebaylistings.xlsx`, buffer, (err) => {
+      fs.writeFileSync(logpath, buffer, (err) => {
         if (err) {
           errorLogging(err);
         }
-        opn(`${home}${documents}${dir}/${date}-ebaylistings.xlsx`);
       })
+      opn(logpath);
     } catch(e) {
       errorLogging(e);
     }
@@ -124,16 +128,16 @@ var errorLogging = (error) => {
   var date = new Date()
   var logError = error;
   var logErrorStack = error.stack;
-  var params = (error.params === undefined ? "" : error.params); 
+  var params = (error.params === undefined ? "" : error.params);
 
   var log = `${date} |/ +
              ${params} |/ +
              ${logError} |/ +
              ${logErrorStack}`;
-             
+
   fs.writeFile('errorLogs.txt', log, (err) => {
     if (err) {
-      var writeError = log + " " + err 
+      var writeError = log + " " + err
       errorLogging(writeFile);
     }
   })
@@ -189,15 +193,15 @@ var errorIcons = () => {
 }
 
 var searchItems = () => {
-  
+
   var searchTerms;
-  
+
   new Promise((resolve, reject) => {
     var params = setSearchParamaters()
     clearList();
     searchingAndErrorIconsHide();
     searchingIcons();
-    
+
     searchTerms = params;
 
    ebay.xmlRequest({
@@ -250,9 +254,9 @@ var searchItems = () => {
   }).catch((error) => {
     searchingAndErrorIconsHide();
     errorIcons();
-    
+
     error.params = searchTerms;
-    
+
     errorLogging(error);
   });
 };
