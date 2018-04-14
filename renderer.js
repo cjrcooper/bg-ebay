@@ -1,20 +1,23 @@
 const ebay = require('ebay-api');
-const config = require('./config.js')
+const config = require('./config.js');
 const _ = require('lodash');
 const os = require('os');
+const logging = require('./js/logging.js');
+const init = require('./js/init.js');
 const $ = require('./lib/jquery-3.3.1.js')
 const shell = require('electron');
 const fs = require('fs');
 const xl = require('excel4node');
 const opn = require('opn');
 const headerConfiguration = require('./params.js')
-const nodemailer = require('nodemailer');
 const path = require('path');
 
 
 
-var excelDataResults = [];
+init.createDirectories();
 
+
+var excelDataResults = [];
 
 var setKeyWords = () => {
     let keyWords = document.getElementById('search-input').value;
@@ -93,20 +96,14 @@ var downloadExcel = (data) => {
 
   wb.writeToBuffer().then((buffer) => {
     try {
-      debugger;
-      if(!fs.existsSync(path.join(home, 'Documents', dir))) {
-        fs.mkdirSync(path.join(home, 'Documents', dir), (err) => {
-          errorLogging(err);
-        })
-      }
       fs.writeFileSync(logpath, buffer, (err) => {
         if (err) {
-          errorLogging(err);
+          logging.error(err);
         }
       })
       opn(logpath);
     } catch(e) {
-      errorLogging(e);
+      logging.error(e);
     }
   });
 };
@@ -120,52 +117,10 @@ $('#excel-download').on('click', () => {
   try {
     downloadExcel(excelDataResults);
   } catch (e) {
-    errorLogging(e);
+    logging.error(e);
   }
 });
 
-var errorLogging = (error) => {
-  var date = new Date()
-  var logError = error;
-  var logErrorStack = error.stack;
-  var params = (error.params === undefined ? "" : error.params);
-
-  var log = `${date} |/ +
-             ${params} |/ +
-             ${logError} |/ +
-             ${logErrorStack}`;
-
-  fs.writeFile('errorLogs.txt', log, (err) => {
-    if (err) {
-      var writeError = log + " " + err
-      errorLogging(writeFile);
-    }
-  })
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    secure: false,
-    port: 25,
-    auth: {
-      user: config.email.address,
-      pass: config.email.password
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
-  });
-
-  let HelperOptions = {
-    from: config.email.from,
-    to: config.email.address,
-    subject: 'BG-Ebay App Error',
-    text: log
-  };
-    transporter.sendMail(HelperOptions, (error, info) => {
-      if (error) {
-        return console.log(error);
-      }
-    });
-};
 
 var searchingIcons = () => {
   $('.loader-container').css({
@@ -257,7 +212,7 @@ var searchItems = () => {
 
     error.params = searchTerms;
 
-    errorLogging(error);
+    logging.error(error);
   });
 };
 
