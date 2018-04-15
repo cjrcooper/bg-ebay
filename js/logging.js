@@ -1,6 +1,7 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment');
 const nodemailer = require('nodemailer');
 const config = require('.././config.js')
 
@@ -9,7 +10,7 @@ var logging = {
   error: (error) => {
       var date = new Date()
       var logError = error;
-      var logErrorStack = error.stack;
+      var logErrorStack = (error.stack === undefined ? "" : error.stack);
       var params = (error.params === undefined ? "" : error.params);
       var log = `${date} |/ +
                  ${params} |/ +
@@ -22,7 +23,7 @@ var logging = {
       var dir = 'Ebay-Results';
       var docs = 'Documents';
       var logs = "logs"
-      var date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/ /g,"_").replace(":", "-").replace(":", "-") + '.xslx';
+      var date = moment().format('DD-MM-YY-hh_mm_ss') + '.xslx';
 
 
       try {
@@ -45,7 +46,6 @@ var logging = {
           subject: 'BG-Ebay App Error',
           text: log
         };
-        throw "error"
 
         transporter.sendMail(helperOptions, (error, info) => {
           if (error) throw error;

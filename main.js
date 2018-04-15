@@ -61,7 +61,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 1155, height: 705})
 
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '/hbs/main.html'),
+    pathname: path.join(__dirname, '/html/main.html'),
     protocol: 'file:',
     slashes: true
   }))

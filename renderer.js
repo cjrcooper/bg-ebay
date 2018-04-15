@@ -1,20 +1,24 @@
 const ebay = require('ebay-api');
-const config = require('./config.js');
 const _ = require('lodash');
 const os = require('os');
-const logging = require('./js/logging.js');
-const init = require('./js/init.js');
-const $ = require('./lib/jquery-3.3.1.js')
 const shell = require('electron');
 const fs = require('fs');
 const xl = require('excel4node');
 const opn = require('opn');
-const headerConfiguration = require('./params.js')
 const path = require('path');
+const moment = require('moment');
+const init = require('./js/init.js');
+const config = require('./config.js');
+const logging = require('./js/logging.js');
+const $ = require('./lib/jquery-3.3.1.js')
+const searchWords = require('./js/searchWords');
 
 
 
 init.createDirectories();
+init.createFiles();
+
+$('#search-container').hide();
 
 
 var excelDataResults = [];
@@ -91,7 +95,7 @@ var downloadExcel = (data) => {
 
   var home = os.homedir()
   var dir = 'EbaySearchResults';
-  var date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/ /g,"_").replace(":", "-").replace(":", "-") + '.xslx';
+  var date = moment().format('DD-MM-YY-hh_mm_ss') + '.xslx';
   var logpath = path.join(home, 'Documents', dir, date);
 
   wb.writeToBuffer().then((buffer) => {
@@ -215,6 +219,33 @@ var searchItems = () => {
     logging.error(error);
   });
 };
+
+
+
+// $(document).ready(function(){
+//    var i=1;
+//   $("#add_row").click(function(){
+//      $('#addr'+i).html("<td>"+ (i+1) +"</td><td><input name='name"+i+"' type='text' placeholder='Name' class='form-control input-md'  /> </td>");
+//        $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
+//         i++;
+//       });
+//       $("#delete_row").click(function(){
+//         if(i>1){
+//           $("#addr"+(i-1)).html('');
+//           i--;
+//     }
+//   });
+// });
+
+
+
+// Update the search terms file
+$(document).ready(function() {
+  let words = searchWords.readDbFile();
+  console.log(words.terms.banana);
+  //
+  // $("#tab_logic tbody").append();
+})
 
 
 
