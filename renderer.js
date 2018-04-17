@@ -11,7 +11,8 @@ const init = require('./js/init.js');
 const config = require('./config.js');
 const logging = require('./js/logging.js');
 const $ = require('./lib/jquery-3.3.1.js')
-const searchWords = require('./js/searchWords');
+const db = require('./js/db.js');
+const terms = require('./js/terms.js')
 
 
 
@@ -241,10 +242,19 @@ var searchItems = () => {
 
 // Update the search terms file
 $(document).ready(function() {
-  let words = searchWords.readDbFile();
-  console.log(words.terms.banana);
-  //
-  // $("#tab_logic tbody").append();
+
+  
+  //term, maxSearchResults, freeShipping, maxPrice
+  // debugger;
+  // terms.add("orange", 15, true, 150);
+  
+  // debugger;
+  // terms.update("orange", 20, false, 50);
+
+  debugger;
+  terms.delete("orange");
+  
+  
 })
 
 

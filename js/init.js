@@ -14,30 +14,36 @@ var init = {
   createDirectories: () => {
     //Creates the Results directory
     let resultsDirectory = path.join(home, docs, dir);
-    if (!fs.existsSync(resultsDirectory)) {
-      fs.mkdirSync(resultsDirectory, (e) => {
+      try {
+        if (!fs.existsSync(resultsDirectory)) {
+          fs.mkdirSync(resultsDirectory)
+        }
+      } catch (e) {
         logging.error(e);
-      })
-    }
+      }
 
     //Creates the logging directory
     let logDirectory = path.join(home, docs, dir, logs);
-    if (!fs.existsSync(logDirectory)) {
-      fs.mkdirSync(logDirectory, (e) => {
+      try {
+        if (!fs.existsSync(logDirectory)) {
+          fs.mkdirSync(logDirectory);
+        }
+      } catch (e) {
         logging.error(e);
-      })
-    }
+      }
   },
 
   createFiles: () => {
     //Creates the db.json file
     let dbJson = path.join(home, docs, dir, db);
-    if (!fs.existsSync(dbJson)) {
-      fs.writeFile(dbJson, (e) => {
+      try {
+        if (!fs.existsSync(dbJson)) {
+          fs.writeFileSync(dbJson);
+        }
+      } catch (e) {
         logging.error(e);
-      })
+      }
     }
-  }
 }
 
 module.exports = init;

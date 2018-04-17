@@ -13,14 +13,21 @@ let dbJson = path.join(home, docs, dir, db);
 
 db = {
   readDbFile: () => {
-      let file = fs.readFileSync(dbJson, 'utf8');
-      return JSON.parse(file);
+      try {
+        let file = fs.readFileSync(dbJson, 'utf8');
+        
+        return JSON.parse(file);
+      } catch (e) {
+        logging.error(e);
+      }
     },
 
   writeDbFile: (dbString) => {
-      let file = fs.writeFile(dbJson, dbString, (err) => {
-        logging.error(err);
-      })
+      try {
+          let file = fs.writeFileSync(dbJson, dbString)
+      } catch (e) {
+          logging.error(err);
+      };
     }
 }
 
