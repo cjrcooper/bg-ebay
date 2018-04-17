@@ -14,11 +14,10 @@ let dbJson = path.join(home, docs, dir, db);
 db = {
   readDbFile: () => {
       try {
-        let file = fs.readFileSync(dbJson, 'utf8');
-        
-        return JSON.parse(file);
+          let file = fs.readFileSync(dbJson, 'utf8');
+          return JSON.parse(file);
       } catch (e) {
-        logging.error(e);
+          logging.error(e);
       }
     },
 

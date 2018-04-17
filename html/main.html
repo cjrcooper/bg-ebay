@@ -16,38 +16,67 @@
       <!--Content -->
         <div id="content">
 
-          <div id="terms-container" class="container">
-            <div class="container">
-    <div class="row clearfix">
-		<div class="col-md-12 column">
-			<table class="table table-bordered table-hover" id="tab_logic">
-				<thead>
-					<tr >
-						<th class="text-center">
-							#
-						</th>
-						<th class="text-center">
-							Name
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr id='addr0'>
-						<td>
-						1
-						</td>
-						<td>
-						<input type="text" name='name0'  placeholder='Name' class="form-control"/>
-						</td>
-					</tr>
-                    <tr id='addr1'></tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<a id="add_row" class="pull-left" style="float: left">Add Row</a><a id='delete_row' class="pull-right" style="float: right">Delete Row</a>
-</div>
-          </div>
+          <div class="container">
+            <div class="row clearfix">
+            	<div class="col-md-12 table-responsive">
+        			<table class="table table-bordered table-hover table-sortable" id="tab_logic">
+        				<thead>
+        					<tr >
+        						<th class="text-center">
+        							Search Terms
+        						</th>
+        					</tr>
+        				</thead>
+        				<tbody>
+            			<tr id='addr0' data-id="0" class="hidden">
+        						<td data-name="name">
+                      <table class="table table-bordered table-hover table-sortable" id="tab_logic">
+                        <thead>
+                          <tr>
+                            <th class="text-center">
+                            </th>
+                            <th class="text-center">
+                              Name
+                            </th>
+                            <th class="text-center">
+                              # of Results
+                            </th>
+                            <th class="text-center">
+                              Free Shipping
+                            </th>
+                              <th class="text-center">
+                              Run Search
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr id='addr0' data-id="0" class="hidden">
+                              <td data-name="desc">
+                                <input type="checkbox" name='mail0' class="form-control" checked/>
+                              </td>
+                              <td data-name="name">
+                                  <input type="text" name='name0'  placeholder='Name' class="form-control"/>
+                              </td>
+                              <td data-name="mail">
+                                  <input type="number" name='mail0' value="15" class="form-control"/>
+                              </td>
+                              <td data-name="desc">
+                                <input type="checkbox" name='mail0' class="form-control" checked/>
+                              </td>
+                              <td data-name="sel">
+                                <button type="button" class="btn btn-primary btn-sml" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Order"><i class="fas fa-play"></i></button>
+                              </td>
+                          </tr>
+                        </tbody>
+                      </table>
+        						</td>
+                  </tr>
+        				</tbody>
+        			</table>
+        		</div>
+        	</div>
+        	<a id="add_row" class="btn btn-default pull-right">Add Row</a>
+        </div>
 
 
           <!-- Search container -->

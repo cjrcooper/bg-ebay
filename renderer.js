@@ -243,18 +243,14 @@ var searchItems = () => {
 // Update the search terms file
 $(document).ready(function() {
 
-  
+
   //term, maxSearchResults, freeShipping, maxPrice
-  // debugger;
-  // terms.add("orange", 15, true, 150);
-  
-  // debugger;
+  // terms.add("strawberry", 15, false, 200);
+
   // terms.update("orange", 20, false, 50);
 
-  debugger;
-  terms.delete("orange");
-  
-  
+  // terms.delete("orange");
+
 })
 
 
