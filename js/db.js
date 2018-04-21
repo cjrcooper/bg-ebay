@@ -1,14 +1,10 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const filepaths = require('./filepaths.js');
 const logging = require('./logging.js')
 
-
-let home = os.homedir()
-let docs = 'Documents';
-let dir = 'Ebay-Results';
-let db = "db.json";
-let dbJson = path.join(home, docs, dir, db);
+let dbJson = filepaths.dbPath();
 
 
 db = {

@@ -1,33 +1,33 @@
-const ebay = require('ebay-api');
-const _ = require('lodash');
 const os = require('os');
-const shell = require('electron');
 const fs = require('fs');
-const xl = require('excel4node');
 const opn = require('opn');
+const _ = require('lodash');
 const path = require('path');
+const ebay = require('ebay-api');
 const moment = require('moment');
+const xl = require('excel4node');
+const shell = require('electron');
+const db = require('./js/db.js');
 const init = require('./js/init.js');
 const config = require('./config.js');
-const logging = require('./js/logging.js');
-const $ = require('./lib/jquery-3.3.1.js')
-const db = require('./js/db.js');
 const terms = require('./js/terms.js')
+const $ = require('./lib/jquery-3.3.1.js');
+const logging = require('./js/logging.js');
+const filepaths = require('./js/filepaths.js')
 
 
 
 init.createDirectories();
 init.createFiles();
 
-$('#search-container').hide();
+$('#new-content-container').hide();
 
 
 var excelDataResults = [];
 
 var setKeyWords = () => {
     let keyWords = document.getElementById('search-input').value;
-    let newWords = _.words(keyWords);
-    return newWords
+    return keyWords
 };
 
 var setPageEntries = () => {
@@ -94,18 +94,11 @@ var downloadExcel = (data) => {
     iterate++;
   })
 
-  var home = os.homedir()
-  var dir = 'EbaySearchResults';
-  var date = moment().format('DD-MM-YY-hh_mm_ss') + '.xslx';
-  var logpath = path.join(home, 'Documents', dir, date);
+  var logpath = filepaths.logPath();
 
   wb.writeToBuffer().then((buffer) => {
     try {
-      fs.writeFileSync(logpath, buffer, (err) => {
-        if (err) {
-          logging.error(err);
-        }
-      })
+      fs.writeFileSync(logpath, buffer);
       opn(logpath);
     } catch(e) {
       logging.error(e);
@@ -223,29 +216,13 @@ var searchItems = () => {
 
 
 
-// $(document).ready(function(){
-//    var i=1;
-//   $("#add_row").click(function(){
-//      $('#addr'+i).html("<td>"+ (i+1) +"</td><td><input name='name"+i+"' type='text' placeholder='Name' class='form-control input-md'  /> </td>");
-//        $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-//         i++;
-//       });
-//       $("#delete_row").click(function(){
-//         if(i>1){
-//           $("#addr"+(i-1)).html('');
-//           i--;
-//     }
-//   });
-// });
-
-
 
 // Update the search terms file
 $(document).ready(function() {
 
 
   //term, maxSearchResults, freeShipping, maxPrice
-  // terms.add("strawberry", 15, false, 200);
+  terms.add("watermelon", 15, false, 200);
 
   // terms.update("orange", 20, false, 50);
 

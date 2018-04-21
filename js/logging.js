@@ -3,27 +3,23 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
-const config = require('.././config.js')
+const filepaths = require('./filepaths.js');
+const config = require('.././config.js');
 
 
 var logging = {
   error: (error) => {
-      var date = new Date()
-      var logError = error;
-      var logErrorStack = (error.stack === undefined ? "" : error.stack);
-      var params = (error.params === undefined ? "" : error.params);
-      var log = `${date} |/ +
+      let date = new Date()
+      let logError = error;
+      let logErrorStack = (error.stack === undefined ? "" : error.stack);
+      let params = (error.params === undefined ? "" : error.params);
+      let logMessage = `${date} |/ +
                  ${params} |/ +
                  ${logError} |/ +
                  ${logErrorStack}`;
 
-
-      //alternative internal logging path
-      var home = os.homedir()
-      var dir = 'Ebay-Results';
-      var docs = 'Documents';
-      var logs = "logs"
-      var date = moment().format('DD-MM-YY-hh_mm_ss') + '.xslx';
+      
+      let logPath = filepaths.logPath();
 
 
       try {
@@ -44,7 +40,7 @@ var logging = {
           from: config.email.from,
           to: config.email.address,
           subject: 'BG-Ebay App Error',
-          text: log
+          text: logMessage
         };
 
         transporter.sendMail(helperOptions, (error, info) => {
@@ -52,8 +48,8 @@ var logging = {
         });
       }
       catch (e) {
-        fs.writeFile(path.join(home, docs, dir, logs, date), log, (err) => {
-          return;
+        fs.writeFile(logPath, log, (err) => {
+          return; //Add some functionality to expose a critical error to the user
         })
       }
     }

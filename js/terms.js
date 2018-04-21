@@ -36,7 +36,8 @@ terms = {
 
 
         //Add the code to email the backupDB
-        backup();
+        let item = JSON.stringify(dbFile.terms[term]);
+        backup(item);
       }
 
     } catch (e) {
