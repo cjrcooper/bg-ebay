@@ -9,7 +9,7 @@ const filepaths = require('./filepaths.js');
 var init = {
   createDirectories: () => {
     //Creates the Results directory
-    let resultsDirectory = filepaths.resultsPath();
+    let resultsDirectory = filepaths.mainPath();
       try {
         if (!fs.existsSync(resultsDirectory)) {
           fs.mkdirSync(resultsDirectory)

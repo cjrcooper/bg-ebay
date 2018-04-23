@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../lib/core.css">
     <link rel="stylesheet" href="../lib/fontawesome/web-fonts-with-css/css/fontawesome-all.css">
     <link rel="stylesheet" href="../lib/fontawesome/web-fonts-with-css/css/fontawesome.css">
+    <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
   </head>
     <body>
       <div class="wrapper">
@@ -18,46 +19,175 @@
 
           <!-- New Content Container Start -->
           <div id="new-content-container" class="container">
-            <div class="row clearfix">
-            	<div class="col-md-12 table-responsive">
-        			<table class="table table-bordered table-hover table-sortable" id="tab_logic">
-        				<thead>
-        					<tr >
-        						<th class="text-center">
-        							Search Terms
-        						</th>
-        					</tr>
-        				</thead>
-        				<tbody>
-            			<tr id='addr0' data-id="0" class="hidden">
-        						<td data-name="name">
-                      <table class="table table-bordered table-hover table-sortable" id="tab_logic">
-                        <thead>
-                          <tr>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <tr id='addr0' data-id="0" class="hidden">
-                              <td data-name="desc">
-                                <div><h3>Hello Test</h3></div>
-                              </td>
-                            </tr>
-                            <tr id='addr0' data-id="0" class="hidden">
-                              <td data-name="desc">
-                                <div><h3>Hello Test</h3></div>
-                              </td>
-                            </tr>
-                        </tbody>
-                      </table>
-        						</td>
-                  </tr>
-        				</tbody>
-        			</table>
-        		</div>
-        	</div>
-        	<a id="add_row" class="btn btn-default pull-right">Add Row</a>
-        </div>
-        <!-- New Content Container End-->
+            <table id="myTable">
+                <thead>
+                    <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 126px;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Name</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 200px;" aria-label="Position: activate to sort column ascending">Position</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 94px;" aria-label="Office: activate to sort column ascending">Office</th><th class="dt-body-right sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 37px;" aria-label="Age: activate to sort column ascending">Age</th><th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 84px;" aria-label="Start date: activate to sort column ascending">Start date</th><th class="dt-body-right sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 0px; display: none;" aria-label="Salary: activate to sort column ascending">Salary</th></tr>
+                </thead>
+                <tbody>
+                   <tr role="row" class="odd">
+                      <td tabindex="0" class="sorting_1">Airi Satou</td>
+                      <td>Accountant</td>
+                      <td>Tokyo</td>
+                      <td class=" dt-body-right">33</td>
+                      <td>2008/11/28</td>
+                      <td class=" dt-body-right" style="display: none;">$162,700</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td class="sorting_1" tabindex="0">Angelica Ramos</td>
+                      <td>Chief Executive Officer (CEO)</td>
+                      <td>London</td>
+                      <td class=" dt-body-right">47</td>
+                      <td>2009/10/09</td>
+                      <td class=" dt-body-right" style="display: none;">$1,200,000</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td tabindex="0" class="sorting_1">Ashton Cox</td>
+                      <td>Junior Technical Author</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">66</td>
+                      <td>2009/01/12</td>
+                      <td class=" dt-body-right" style="display: none;">$86,000</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td class="sorting_1" tabindex="0">Bradley Greer</td>
+                      <td>Software Engineer</td>
+                      <td>London</td>
+                      <td class=" dt-body-right">41</td>
+                      <td>2012/10/13</td>
+                      <td class=" dt-body-right" style="display: none;">$132,000</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Brenden Wagner</td>
+                      <td>Software Engineer</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">28</td>
+                      <td>2011/06/07</td>
+                      <td class=" dt-body-right" style="display: none;">$206,850</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td tabindex="0" class="sorting_1">Brielle Williamson</td>
+                      <td>Integration Specialist</td>
+                      <td>New York</td>
+                      <td class=" dt-body-right">61</td>
+                      <td>2012/12/02</td>
+                      <td class=" dt-body-right" style="display: none;">$372,000</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Bruno Nash</td>
+                      <td>Software Engineer</td>
+                      <td>London</td>
+                      <td class=" dt-body-right">38</td>
+                      <td>2011/05/03</td>
+                      <td class=" dt-body-right" style="display: none;">$163,500</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td class="sorting_1" tabindex="0">Caesar Vance</td>
+                      <td>Pre-Sales Support</td>
+                      <td>New York</td>
+                      <td class=" dt-body-right">21</td>
+                      <td>2011/12/12</td>
+                      <td class=" dt-body-right" style="display: none;">$106,450</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Cara Stevens</td>
+                      <td>Sales Assistant</td>
+                      <td>New York</td>
+                      <td class=" dt-body-right">46</td>
+                      <td>2011/12/06</td>
+                      <td class=" dt-body-right" style="display: none;">$145,600</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td tabindex="0" class="sorting_1">Cedric Kelly</td>
+                      <td>Senior Javascript Developer</td>
+                      <td>Edinburgh</td>
+                      <td class=" dt-body-right">22</td>
+                      <td>2012/03/29</td>
+                      <td class=" dt-body-right" style="display: none;">$433,060</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Charde Marshall</td>
+                      <td>Regional Director</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">36</td>
+                      <td>2008/10/16</td>
+                      <td class=" dt-body-right" style="display: none;">$470,600</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td tabindex="0" class="sorting_1">Colleen Hurst</td>
+                      <td>Javascript Developer</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">39</td>
+                      <td>2009/09/15</td>
+                      <td class=" dt-body-right" style="display: none;">$205,500</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Dai Rios</td>
+                      <td>Personnel Lead</td>
+                      <td>Edinburgh</td>
+                      <td class=" dt-body-right">35</td>
+                      <td>2012/09/26</td>
+                      <td class=" dt-body-right" style="display: none;">$217,500</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td class="sorting_1" tabindex="0">Donna Snider</td>
+                      <td>Customer Support</td>
+                      <td>New York</td>
+                      <td class=" dt-body-right">27</td>
+                      <td>2011/01/25</td>
+                      <td class=" dt-body-right" style="display: none;">$112,000</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Doris Wilder</td>
+                      <td>Sales Assistant</td>
+                      <td>Sidney</td>
+                      <td class=" dt-body-right">23</td>
+                      <td>2010/09/20</td>
+                      <td class=" dt-body-right" style="display: none;">$85,600</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td class="sorting_1" tabindex="0">Finn Camacho</td>
+                      <td>Support Engineer</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">47</td>
+                      <td>2009/07/07</td>
+                      <td class=" dt-body-right" style="display: none;">$87,500</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Fiona Green</td>
+                      <td>Chief Operating Officer (COO)</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">48</td>
+                      <td>2010/03/11</td>
+                      <td class=" dt-body-right" style="display: none;">$850,000</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td tabindex="0" class="sorting_1">Garrett Winters</td>
+                      <td>Accountant</td>
+                      <td>Tokyo</td>
+                      <td class=" dt-body-right">63</td>
+                      <td>2011/07/25</td>
+                      <td class=" dt-body-right" style="display: none;">$170,750</td>
+                   </tr>
+                   <tr role="row" class="odd">
+                      <td class="sorting_1" tabindex="0">Gavin Cortez</td>
+                      <td>Team Leader</td>
+                      <td>San Francisco</td>
+                      <td class=" dt-body-right">22</td>
+                      <td>2008/10/26</td>
+                      <td class=" dt-body-right" style="display: none;">$235,500</td>
+                   </tr>
+                   <tr role="row" class="even">
+                      <td class="sorting_1" tabindex="0">Gavin Joyce</td>
+                      <td>Developer</td>
+                      <td>Edinburgh</td>
+                      <td class=" dt-body-right">42</td>
+                      <td>2010/12/22</td>
+                      <td class=" dt-body-right" style="display: none;">$92,575</td>
+                   </tr>
+                </tbody>
+            </table>
+          </div>
+          <!-- New Content Container End-->
 
           <!-- Search container -->
           <div id="search-container" class="container">
@@ -69,7 +199,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12" style="text-align:center">
-                    <h3> </h3>
+                    <h3></h3>
                 </div>
             </div>
             <div class="row">
@@ -150,5 +280,6 @@
         window.$ = window.jQuery = require('../lib/jquery-3.3.1.js')
       </script>
       <script type="text/javascript" src="../lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+      <script type="text/javascript" src="../lib/datatables/jquery.dataTables.min.js"></script>
     </body>
 </html>

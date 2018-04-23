@@ -1,6 +1,5 @@
 const os = require('os');
 const fs = require('fs');
-const opn = require('opn');
 const _ = require('lodash');
 const path = require('path');
 const ebay = require('ebay-api');
@@ -14,13 +13,37 @@ const terms = require('./js/terms.js')
 const $ = require('./lib/jquery-3.3.1.js');
 const logging = require('./js/logging.js');
 const filepaths = require('./js/filepaths.js')
+const writeToExcel = require('./js/writeToExcel');
 
 
+
+// require( 'jszip' );
+// require( 'pdfmake' );
+// require( 'datatables.net-bs4' )();
+// require( 'datatables.net-autofill-bs4' )();
+// require( 'datatables.net-buttons-bs4' )();
+// require( 'datatables.net-buttons/js/buttons.colVis.js' )();
+// require( 'datatables.net-buttons/js/buttons.flash.js' )();
+// require( 'datatables.net-buttons/js/buttons.html5.js' )();
+// require( 'datatables.net-colreorder-bs4' )();
+// require( 'datatables.net-fixedcolumns-bs4' )();
+// require( 'datatables.net-fixedheader-bs4' )();
+// require( 'datatables.net-keytable-bs4' )();
+// require( 'datatables.net-responsive-bs4' )();
+// require( 'datatables.net-rowgroup-bs4' )();
+// require( 'datatables.net-rowreorder-bs4' )();
+// require( 'datatables.net-scroller-bs4' )();
+// require( 'datatables.net-select-bs4' )();
+
+$(document).ready( function () {
+    $('#myTable').DataTable();
+} );
 
 init.createDirectories();
 init.createFiles();
 
-$('#new-content-container').hide();
+//$('#new-content-container').hide();
+$('#search-container').hide();
 
 
 var excelDataResults = [];
@@ -54,58 +77,6 @@ var checkEmptySearch = () => {
   }
 };
 
-var downloadExcel = (data) => {
-
-  if (data.length < 1) {
-    return
-  }
-
-  var wb = new xl.Workbook();
-  var ws = wb.addWorksheet("EbayListings");
-  var iterate = 2;
-
-  _.forEach(excelDataResults, (value) => {
-
-    var myStyle = wb.createStyle({
-    font: {
-        bold: true,
-        color: '#FF0800'
-      }
-    });
-
-    //Row height
-    ws.row(1).setHeight(20);
-    ws.column(1).setWidth(25);
-    ws.column(2).setWidth(60);
-    ws.column(3).setWidth(15);
-    ws.column(4).setWidth(15);
-
-    //Excel Headers
-    ws.cell(1, 1).string("Seller").style(myStyle);
-    ws.cell(1, 2).string("Item").style(myStyle);
-    ws.cell(1, 3).string("Price").style(myStyle);
-    ws.cell(1, 4).string("Shipping").style(myStyle);
-
-    //Excel Headers
-    ws.cell(iterate,1).string(value[0])
-    ws.cell(iterate,2).string(value[1])
-    ws.cell(iterate,3).number(value[2])
-    ws.cell(iterate,4).number(value[3])
-    iterate++;
-  })
-
-  var logpath = filepaths.logPath();
-
-  wb.writeToBuffer().then((buffer) => {
-    try {
-      fs.writeFileSync(logpath, buffer);
-      opn(logpath);
-    } catch(e) {
-      logging.error(e);
-    }
-  });
-};
-
 $(document).on('click', 'a[href^="http"]', function(e) {
     e.preventDefault();
     shell.shell.openExternal(this.href);
@@ -113,7 +84,7 @@ $(document).on('click', 'a[href^="http"]', function(e) {
 
 $('#excel-download').on('click', () => {
   try {
-    downloadExcel(excelDataResults);
+    let excelDoc = writeToExcel.createExcel(excelDataResults);
   } catch (e) {
     logging.error(e);
   }
@@ -222,7 +193,7 @@ $(document).ready(function() {
 
 
   //term, maxSearchResults, freeShipping, maxPrice
-  terms.add("watermelon", 15, false, 200);
+  //terms.add("watermelon", 15, false, 200);
 
   // terms.update("orange", 20, false, 50);
 
