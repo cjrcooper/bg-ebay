@@ -1,4 +1,5 @@
-var config = require('.././config.js');
+const ebay = require('ebay-api');
+const config = require('.././config.js');
 
 let configuration = {
   serviceName: 'Finding',
@@ -8,21 +9,20 @@ let configuration = {
         'X-EBAY-SOA-GLOBAL-ID': 'EBAY-AU'
     }
   },
-  params: {  keywords: setKeyWords(),
+  params: {
+    keywords: "",
     outputSelector: ['AspectHistogram'],
 
     paginationInput: {
-      entriesPerPage: setPageEntries()
+      entriesPerPage: 0
     },
 
     itemFilter: [
-      {name: 'FreeShippingOnly', value: freeShippingOnly()},
-      {name: 'MaxPrice', value: setMaxPrice()}
     ],
 
     outputSelector: "SellerInfo"
   },
-  parser: {},    // (default)
+  parser: ebay.parseResponseJson,    // (default)
   devId: config.production.devId,
   certId: config.production.certId,
   appId: config.production.appId,

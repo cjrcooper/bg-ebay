@@ -10,6 +10,7 @@ const db = require('./js/db.js');
 const init = require('./js/init.js');
 const config = require('./config.js');
 const terms = require('./js/terms.js')
+const search = require('./js/search.js');
 const $ = require('./lib/jquery-3.3.1.js');
 const logging = require('./js/logging.js');
 const filepaths = require('./js/filepaths.js')
@@ -19,30 +20,92 @@ const writeToExcel = require('./js/writeToExcel');
 
 
 
-$(document).ready( function () {
-			$('#myTable')
-				.addClass( 'nowrap' )
-				.dataTable( {
-					responsive: true,
-					columnDefs: [
-						{ targets: [-1, -3], className: 'dt-body-right' }
-					]
-				} );
-		} );
+     $(document).ready(function () {
+
+
+       let dataResults = db.readDbFile();
+       let dataSection = [];
+
+      _.forEach(dataResults.terms, (results)  => {
+        dataSection.push(results);
+      })
+
+         var table = $('#example').DataTable({
+             "data": dataSection,
+             select:"single",
+             "columns": [
+                 {
+                     "className": 'details-control',
+                     "orderable": false,
+                     "data": null,
+                     "defaultContent": '',
+                     "render": function () {
+                         return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                     },
+                     width:"15px"
+                 },
+                 { "data": "term" },
+                 { "data": "maxSearchResults" },
+                 { "data": "freeShipping" },
+                 { "data": "maxPrice" },
+                 {
+                   "className": 'playButton',
+                   "orderable": false,
+                   "defaultContent": '',
+                   "render": function () {
+                     return '<i class="fas fa-play-circle"></i>'
+                   }
+
+                 }
+             ],
+             "order": [[1, 'asc']]
+         });
+
+         // Add event listener for opening and closing details
+         $('#example tbody').on('click', 'td.details-control', function () {
+             var tr = $(this).closest('tr');
+             var tdi = tr.find("i.fa");
+             var row = table.row(tr);
+
+             if (row.child.isShown()) {
+                 // This row is already open - close it
+                 row.child.hide();
+                 tr.removeClass('shown');
+                 tdi.first().removeClass('fa-minus-square');
+                 tdi.first().addClass('fa-plus-square');
+             }
+             else {
+                 // Open this row
+                 row.child(format(row.data())).show();
+                 tr.addClass('shown');
+                 tdi.first().removeClass('fa-plus-square');
+                 tdi.first().addClass('fa-minus-square');
+             }
+         });
+
+         table.on("user-select", function (e, dt, type, cell, originalEvent) {
+             if ($(cell.node()).hasClass("details-control")) {
+                 e.preventDefault();
+             }
+         });
+     });
+
+   function format(d){
+      return search.item("pineapple", 15, false, 200);
+    }
 
 
 init.createDirectories();
 init.createFiles();
 
 //$('#new-content-container').hide();
-$('#search-container').hide();
+//$('#search-container').hide();
 
 
 var excelDataResults = [];
 
 var setKeyWords = () => {
-    let keyWords = document.getElementById('search-input').value;
-    return keyWords
+    return document.getElementById('search-input').value;
 };
 
 var setPageEntries = () => {
@@ -166,7 +229,10 @@ var searchItems = () => {
 
           final += '<tr>' + seller + title + price + shipping + link + '</tr>';
         }
-        $('#table tbody').html(final)
+
+        return final
+
+        //$('#table tbody').html(final)
   }).catch((error) => {
     searchingAndErrorIconsHide();
     errorIcons();
