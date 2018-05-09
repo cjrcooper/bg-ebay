@@ -7,6 +7,7 @@ let docs = 'Documents';
 let dir = 'Ebay-Results';
 let log = "logs";
 let db = "db.json";
+let search = "search.json";
 let date = moment().format('DD-MM-YY-hh_mm_ss');
 let xl = date + '.xlsx';
 
@@ -22,6 +23,10 @@ filepaths = {
 
   dbPath: () => {
     return path.join(home, docs, dir, db);
+  },
+
+  searchPath: () => {
+    return path.join(home, docs, dir, search);
   },
 
   logPath: () => {
