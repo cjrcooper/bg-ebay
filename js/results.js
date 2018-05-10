@@ -1,8 +1,8 @@
 const logging = require('./logging.js');
-
+const terms = require('./terms.js');
 
 let searchResults = {
-  constructTable: (itemResponse) => {
+  constructTable: (itemsResponse, term, maxSearchResults, freeShippingOnly, maxPrice) => {
     //searchingAndErrorIconsHide();
     let items = itemsResponse.searchResult.item;
     let result = "";
@@ -34,17 +34,10 @@ let searchResults = {
       result += '<tr>' + seller + title + price + shipping + link + '</tr>';
     }
 
-    let table = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + final +'</table>';
-
-
-
-    try {
-
-    } catch (e) {
-
-    }
+    let table = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + result +'</table>';
+    terms.update(term, maxSearchResults, freeShippingOnly, maxPrice, table);
     
-    return table
+    return;
   }
 };
 

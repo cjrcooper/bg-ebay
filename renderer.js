@@ -14,11 +14,14 @@ const search = require('./js/search.js');
 const $ = require('./lib/jquery-3.3.1.js');
 const logging = require('./js/logging.js');
 const filepaths = require('./js/filepaths.js')
+const searchResults = require('./js/results.js');
 const writeToExcel = require('./js/writeToExcel');
 
 
 
-
+init.createDirectories();
+init.createFiles();
+  
 
      $(document).ready(function () {
 
@@ -71,7 +74,22 @@ const writeToExcel = require('./js/writeToExcel');
                   row.child.hide();
                   tr.removeClass('shown');
              } else {
-                  row.child( format(row.data()) ).show();
+               let showResult;
+                  try {
+                    let childRowTable = db.readDbFile()
+                    let rowData = row.data()
+                    let findDataTable = _.find(childRowTable, rowData.term);
+                    let find = _.find(findDataTable, "results");
+                    if(findDataTable[rowData.term].results !== undefined) {
+                        showResult = findDataTable[rowData.term].results;
+                    } else {
+                      showResult = "<div>Empty</div>"
+                    }
+                  } catch (e) {
+                    logging.error(e)
+                  }
+                  
+                  row.child(showResult).show();
                   tr.addClass('shown');
              }
          });
@@ -81,30 +99,18 @@ const writeToExcel = require('./js/writeToExcel');
                  e.preventDefault();
              }
          });
+         
+         
+         $(".playButton").on('click', function () {
+           let tr = $(this).closest('tr');
+           let row = table.row(tr);
+           let values = row.data();
+           
+           search.item(values.term, values.maxSearchResults, values.freeShipping, values.maxPrice);
+         });
+         
      });
-
-
-     function format ( d ) {
-        // `d` is the original data object for the row
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td>Full name:</td>'+
-                '<td>'+d.name+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Extension number:</td>'+
-                '<td>'+d.extn+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Extra info:</td>'+
-                '<td>And any further details here (images etc)...</td>'+
-            '</tr>'+
-        '</table>';
-    }
-
-
-init.createDirectories();
-init.createFiles();
+    
 
 //$('#new-content-container').hide();
 //$('#search-container').hide();
@@ -178,6 +184,7 @@ var errorIcons = () => {
     "display": "block"
   })
 }
+
 
 var searchItems = () => {
 

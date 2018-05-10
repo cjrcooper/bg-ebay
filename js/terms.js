@@ -49,7 +49,7 @@ terms = {
 
 
 
-  update: (term, maxSearchResults, freeShipping, maxPrice) => {
+  update: (term, maxSearchResults, freeShipping, maxPrice, resultsTable) => {
     try {
 
       let dbFile = db.readDbFile();
@@ -58,10 +58,13 @@ terms = {
       dbFile.terms[term].maxSearchResults = maxSearchResults
       dbFile.terms[term].freeShipping = freeShipping
       dbFile.terms[term].maxPrice = maxPrice;
+      dbFile.terms[term].results = resultsTable;
 
       //Parse the new entry and write it to the DB
       let addNewEntry = JSON.stringify(dbFile);
       db.writeDbFile(addNewEntry);
+      
+      console.log(addNewEntry)
 
 
       //Add the code to email the backupDB

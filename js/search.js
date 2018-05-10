@@ -6,14 +6,17 @@ let searchResults = require('./results.js');
 
 
 let search = {
-  item: (term, maxSearchResults, freeShipping, maxPrice, objectNode) => {
+  item: (term, maxSearchResults, freeShipping, maxPrice) => {
+    console.log(term, maxSearchResults, freeShipping, maxPrice);
+    
+    
     let searchTerms;
 
     new Promise((resolve, reject) => {
 
       //Add the search params to the configuration
       searchConfiguration.params.keywords = term
-      searchConfiguration.params.itemFilter.push({
+      searchConfiguration.params.itemFilter.push({  
         name: 'FreeShippingOnly', value: freeShipping,
         name: 'MaxPrice', value: maxPrice
       })
@@ -31,7 +34,7 @@ let search = {
           }
       });
     }).then((itemsResponse) => {
-        return searchResults.constructTable(itemsResponse);
+        return searchResults.constructTable(itemsResponse, term, maxSearchResults, freeShipping, maxPrice);
     }).catch((error) => {
       //searchingAndErrorIconsHide();
       //errorIcons();
